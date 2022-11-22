@@ -27,18 +27,20 @@ class PaywallBuilder private constructor(
 
         fun apiClient(apiClient: String) = apply { this.apiClient = apiClient }
         fun apiKey(apiKey: String) = apply { this.apiKey = apiKey }
-        fun payWallListener(payWallListener: PaywallListener) = apply { this.payWallListener = payWallListener }
+        fun payWallListener(payWallListener: PaywallListener) =
+            apply { this.payWallListener = payWallListener }
+
         fun build() = PaywallBuilder(apiClient, apiKey, payWallListener)
     }
 
     fun getVersion(context: Context) {
         val queue = Volley.newRequestQueue(context)
-        val url = "https://dev.itspaywall.com/api/paywall/payment/version"
+        val url = Constants.BASE_URL + Constants.VERSION
         val sr: StringRequest = object : StringRequest(
             Method.GET, url,
             Response.Listener { response ->
                 Log.e("HttpClient", "success! response: $response")
-                              },
+            },
             Response.ErrorListener { error ->
                 Log.e("HttpClient", "error: $error")
             }) {
@@ -98,13 +100,14 @@ class PaywallBuilder private constructor(
 
         val stringRequest = StringRequest(
             Request.Method.POST, url,
-            object: Response.Listener<String> {
+            object : Response.Listener<String> {
                 override fun onResponse(response: String) {
                     val gson = Gson()
-                    val start3DResponse: Start3DResponse = gson.fromJson(response, Start3DResponse::class.java)
+                    val start3DResponse: Start3DResponse =
+                        gson.fromJson(response, Start3DResponse::class.java)
                 }
             },
-            object:Response.ErrorListener {
+            object : Response.ErrorListener {
                 override fun onErrorResponse(error: VolleyError?) {
 
                 }
@@ -118,13 +121,14 @@ class PaywallBuilder private constructor(
 
         val stringRequest = StringRequest(
             Request.Method.POST, url,
-            object: Response.Listener<String> {
+            object : Response.Listener<String> {
                 override fun onResponse(response: String) {
                     val gson = Gson()
-                    val end3DResponse: End3DResponse = gson.fromJson(response, End3DResponse::class.java)
+                    val end3DResponse: End3DResponse =
+                        gson.fromJson(response, End3DResponse::class.java)
                 }
             },
-            object:Response.ErrorListener {
+            object : Response.ErrorListener {
                 override fun onErrorResponse(error: VolleyError?) {
 
                 }

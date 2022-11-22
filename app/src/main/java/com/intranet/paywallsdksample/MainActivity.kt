@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         paywallBuilder.getVersion(this)
-        paywallBuilder.start3D(this)
-        paywallBuilder.end3D(this)
+        //paywallBuilder.start3D(this)
+        //paywallBuilder.end3D(this)
     }
 }
