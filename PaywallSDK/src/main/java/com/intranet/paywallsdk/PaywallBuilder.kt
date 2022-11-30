@@ -2,15 +2,23 @@ package com.intranet.paywallsdk
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
+import com.android.volley.Request.Method.GET
 import com.android.volley.Response
 import com.android.volley.VolleyError
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
-import com.intranet.paywallsdk.model.End3DResponse
-import com.intranet.paywallsdk.model.Start3DResponse
+import com.intranet.paywallsdk.model.*
+import com.intranet.paywallsdk.services.ServiceInstance
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
+import org.json.JSONObject
 
 
 class PaywallBuilder private constructor(
@@ -18,6 +26,11 @@ class PaywallBuilder private constructor(
     val apiKey: String?,
     val payWallListener: PaywallListener?
 ) {
+
+    val loading = MutableLiveData<Boolean>()
+    val networkError = MutableLiveData<Throwable>()
+    private val disposable = CompositeDisposable()
+    private val serviceInstance = ServiceInstance()
 
     data class Builder(
         var apiClient: String? = null,
@@ -33,106 +46,101 @@ class PaywallBuilder private constructor(
         fun build() = PaywallBuilder(apiClient, apiKey, payWallListener)
     }
 
-    fun getVersion(context: Context) {
-        val queue = Volley.newRequestQueue(context)
-        val url = Constants.BASE_URL + Constants.VERSION
-        val sr: StringRequest = object : StringRequest(
-            Method.GET, url,
-            Response.Listener { response ->
-                Log.e("HttpClient", "success! response: $response")
-            },
-            Response.ErrorListener { error ->
-                Log.e("HttpClient", "error: $error")
-            }) {
-            /*override fun getParams(): Map<String, String>? {
-                val params: MutableMap<String, String> = HashMap()
-                params["apiclientpublic"] = apiClient
-                params["apikeypublic"] = "YOUR PASSWORD"
-                return params
-            }*/
+    fun getVersion() {
+        try {
+            this.apiKey?.let {
+                this.apiClient?.let { it1 ->
+                    serviceInstance.version(it, it1)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object :
+                            DisposableSingleObserver<VersionResponse>() {
+                            override fun onSuccess(response: VersionResponse) {
+                                val gson = Gson()
+                                val jsonString = gson.toJson(response)
+                                payWallListener?.onSuccess(
+                                    RequestTypes.Version.type,
+                                    jsonString
+                                )
+                            }
 
-            @Throws(AuthFailureError::class)
-            override fun getHeaders(): Map<String, String> {
-                val params: MutableMap<String, String> = HashMap()
-                //params["Content-Type"] = "application/x-www-form-urlencoded"
-                params["apiclientpublic"] = apiClient.toString()
-                params["apikeypublic"] = apiKey.toString()
-                return params
+                            override fun onError(e: Throwable) {
+                            }
+                        })
+                }
+            }?.let {
+                disposable.add(
+                    it
+                )
             }
+        } catch (e: Exception) {
+
         }
-        queue.add(sr)
     }
 
-    /*fun getVersion2(context: Context) {
-        val queue = Volley.newRequestQueue(context)
-        val url = context.resources.getString(R.string.base_url) + "payment/version"
+    fun start3DPayment(start3DPaymentRequestModel: Start3DPaymentRequestModel) {
 
-        val stringRequest = StringRequest(
-            Request.Method.GET, url,
-            object: Response.Listener<String> {
-                override fun onResponse(response: String) {
-                    val gson = Gson()
-                    val versionResponse: VersionResponse = gson.fromJson(response, VersionResponse::class.java)
-                }
-            },
-            object:Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
+        try {
 
+            this.apiKey?.let {
+                this.apiClient?.let { it1 ->
+                    serviceInstance.start3D(it, it1, start3DPaymentRequestModel)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object :
+                            DisposableSingleObserver<Start3DResponse>() {
+                            override fun onSuccess(response: Start3DResponse) {
+                                val gson = Gson()
+                                val jsonString = gson.toJson(response)
+                                payWallListener?.onSuccess(
+                                    RequestTypes.Start3D.type,
+                                    jsonString
+                                )
+                            }
+
+                            override fun onError(e: Throwable) {
+                            }
+                        })
                 }
+            }?.let {
+                disposable.add(
+                    it
+                )
             }
-                    override fun getHeaders(): Map<String, String> {
-                // Create HashMap of your Headers as the example provided below
-
-                val headers = HashMap<String, String>()
-                headers["Content-Type"] = "application/json"
-                headers["app_id"] = APP_ID
-                headers["app_key"] = API_KEY
-
-                return headers
-            })
-
-        queue!!.add(stringRequest)
-    }*/
-
-    fun start3D(context: Context) {
-        val queue = Volley.newRequestQueue(context)
-        val url = "https://dev.itspaywall.com/api/paywall/payment/start3d"
-
-        val stringRequest = StringRequest(
-            Request.Method.POST, url,
-            object : Response.Listener<String> {
-                override fun onResponse(response: String) {
-                    val gson = Gson()
-                    val start3DResponse: Start3DResponse =
-                        gson.fromJson(response, Start3DResponse::class.java)
-                }
-            },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-
-                }
-            })
-        queue!!.add(stringRequest)
+        } catch (e: Exception) {
+        }
     }
 
-    fun end3D(context: Context) {
-        val queue = Volley.newRequestQueue(context)
-        val url = "https://dev.itspaywall.com/api/paywall/payment/end3d"
+    fun end3DPayment(endPaymentRequestModel: EndPaymentRequestModel) {
 
-        val stringRequest = StringRequest(
-            Request.Method.POST, url,
-            object : Response.Listener<String> {
-                override fun onResponse(response: String) {
-                    val gson = Gson()
-                    val end3DResponse: End3DResponse =
-                        gson.fromJson(response, End3DResponse::class.java)
-                }
-            },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
+        try {
 
+            this.apiKey?.let {
+                this.apiClient?.let { it1 ->
+                    serviceInstance.end3D(it, it1, endPaymentRequestModel)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object :
+                            DisposableSingleObserver<End3DResponse>() {
+                            override fun onSuccess(response: End3DResponse) {
+                                val gson = Gson()
+                                val jsonString = gson.toJson(response)
+                                payWallListener?.onSuccess(
+                                    RequestTypes.End3D.type,
+                                    jsonString
+                                )
+                            }
+
+                            override fun onError(e: Throwable) {
+                            }
+                        })
                 }
-            })
-        queue!!.add(stringRequest)
+            }?.let {
+                disposable.add(
+                    it
+                )
+            }
+        } catch (e: Exception) {
+        }
     }
 }
