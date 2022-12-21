@@ -9,7 +9,7 @@ implementation 'com.github.intranettechnology:paywallsdkandroid:Beta-1.0.2'
             .
             .
     repositories {
-        maven { url 'https://jitpack.io' } add jitapck repository
+        maven { url 'https://jitpack.io' } //add jitapck repository
     }
             .
             .
