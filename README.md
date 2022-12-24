@@ -11,7 +11,7 @@ implementation 'com.github.intranettechnology:paywallsdkandroid:1.0.0'
     }
 ```
 
-## Kotlin Usage
+## Kotlin Kullanımı
 
 'Paywall Listener' interface'ini fragment veya aktiviteye ekleyin. Başarılı veya başarısız sonuçları takip edebileceğiniz 2 fonksiyon ekleyecektir.
 
