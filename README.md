@@ -6,13 +6,9 @@
 ```kotlin
 implementation 'com.github.intranettechnology:paywallsdkandroid:Beta-1.0.2'
 
-            .
-            .
     repositories {
         maven { url 'https://jitpack.io' } // jitapck repository ekleyin
     }
-            .
-            .
 ```
 
 ## Kotlin Usage
@@ -32,14 +28,11 @@ MainActivity : AppCompatActivity(), PaywallListener {
 }
 ```
 
-Paywall SDK'i kullanabilmek için Paywall ekibinden almış olduğunuz "publicapikey" ve "publicapiclient" parametrelerine ihtiyacınız var. Bunlarla birlikte aşağıdaki şekilde PaywallBuilder' ı ilklendirebilirsiniz.
+Paywall SDK'i kullanabilmek için Paywall paneli üzerinden erişebileceğiniz (yoksa oluşturabilirsiniz) "publicapikey" ve "publicapiclient" parametrelerine ihtiyacınız var. Bunlarla birlikte aşağıdaki şekilde PaywallBuilder' ı ilklendirebilirsiniz.
 
 ```kotlin
-                .
-                .
+              
 private lateinit var paywallBuilder: PaywallBuilder
-                .
-                .
                 
 paywallBuilder = PaywallBuilder.Builder()
             .payWallListener(this)
@@ -86,8 +79,6 @@ data class Start3DPaymentRequestModel(
 
 ```kotlin
 paywallBuilder.start3DPayment(start3DPaymentRequestModel = Start3DPaymentRequestModel()) // 3D ödeme başlat
-            .
-            .
 override fun onSuccess(type: Int, response: String) {
         val gson = Gson()
         when (type) {
@@ -99,8 +90,6 @@ override fun onSuccess(type: Int, response: String) {
             }
         }
     }
-          .
-          .
 ```
 
 3D Ödeme sonlandırma:
@@ -117,23 +106,15 @@ data class EndPaymentRequestModel(
 ```
 ```kotlin
 paywallBuilder.end3DPayment(endPaymentRequestModel = EndPaymentRequestModel()) // Ödeme sonlandırma
-            .
-            .
 override fun onSuccess(type: Int, response: String) {
         val gson = Gson()
         when (type) {
-                        .
-                        .
             RequestTypes.End3D.type ->  { // Ödeme sonlandırma yanıtı
                 val end3DResponse: End3DResponse = gson.fromJson(response, End3DResponse::class.java)
                 Log.d(TAG, end3DResponse.toString())
-                        .
-                        .
             }
         }
     }
-          .
-          .
 ```
 
 Hata mesajlarını yakalayın
