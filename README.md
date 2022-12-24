@@ -1,7 +1,7 @@
 # paywallsdkandroid
 
 
-## Installation
+## Projeye Ekleme
 
 ```kotlin
 implementation 'com.github.intranettechnology:paywallsdkandroid:Beta-1.0.2'
@@ -9,7 +9,7 @@ implementation 'com.github.intranettechnology:paywallsdkandroid:Beta-1.0.2'
             .
             .
     repositories {
-        maven { url 'https://jitpack.io' } //add jitapck repository
+        maven { url 'https://jitpack.io' } // jitapck repository ekleyin
     }
             .
             .
@@ -17,12 +17,11 @@ implementation 'com.github.intranettechnology:paywallsdkandroid:Beta-1.0.2'
 
 ## Kotlin Usage
 
-Inherit 'Paywall Listener' to activity or fragment for detect your functions result. It will override 2 function which are called 'OnSuccess' and 'OnError'.
+'Paywall Listener' interface'ini fragment veya aktiviteye ekleyin. Başarılı veya başarısız sonuçları takip edebileceğiniz 2 fonksiyon ekleyecektir.
 
 ```kotlin
 MainActivity : AppCompatActivity(), PaywallListener {
-              .
-              .
+             
     override fun onSuccess(type: Int, response: String) {
 
     }
@@ -30,12 +29,10 @@ MainActivity : AppCompatActivity(), PaywallListener {
     override fun onError(type: Int, message: String) {
 
     }
-              .
-              .
 }
 ```
 
-To Initialize Paywall builder need to have apiclient and apikey. Than you can use all functions which PaywallSDK has.
+Paywall SDK'i kullanabilmek için Paywall ekibinden almış olduğunuz "publicapikey" ve "publicapiclient" parametrelerine ihtiyacınız var. Bunlarla birlikte aşağıdaki şekilde PaywallBuilder' ı ilklendirebilirsiniz.
 
 ```kotlin
                 .
@@ -55,30 +52,24 @@ paywallBuilder = PaywallBuilder.Builder()
 Version:
 
 ```kotlin
-paywallBuilder.getVersion() // get version information
-        .
-        .
+paywallBuilder.getVersion() // versiyon bilgisini alın
+        
+        
 override fun onSuccess(type: Int, response: String) {
         val gson = Gson()
         when (type) {
-                        .
-                        .
-            RequestTypes.Version.type ->  { // get version response
-                val versionResponse: VersionResponse = gson.fromJson(response, VersionResponse::class.java) //Convert json to Version Response Model
+            RequestTypes.Version.type ->  { // versiyon yanıtı
+                val versionResponse: VersionResponse = gson.fromJson(response, VersionResponse::class.java)
                 Log.d(TAG, versionResponse.toString())
-                        .
-                        .
             }
         }
     }
-        .
-        .
 
 ```
 
-Start3d Payment:
+3D Ödeme başlat:
 
-First of all, you have to fill the "Start3DPaymentRequestModel" to start 3D Payment.
+3D ödeme başlatmak için "Start3DPaymentRequestModel" modelini doldurmanız gerekmektedir. Bu model içerisinde "PaymentDetail" objesindeki "MerchantUniqueCode" parametresine her defasında unique bir kod vermelisiniz. Bu kod daha sonra ödeme bitirme işleminde kullanılacaktır. "MerchantSuccessBackUrl" parametresinde, 3D ödeme ekranında başarılı sonuç alındığı takdirde kullanıcının ilerlemesini istediğiniz sayfa ve aynı zamanda sizin takip edeceğiniz bir url eklemeniz gerekmektedir. "MerchantFailBackUrl" parametresinde, 3D ödeme ekranında başarısız sonuç alındığı takdirde kullanıcının ilerlemesini istediğiniz sayfa ve aynı zamanda sizin takip edeceğiniz bir url eklemeniz gerekmektedir.
 ```kotlin
 
 data class Start3DPaymentRequestModel(
@@ -94,21 +85,17 @@ data class Start3DPaymentRequestModel(
 ```
 
 ```kotlin
-paywallBuilder.start3DPayment(start3DPaymentRequestModel = Start3DPaymentRequestModel()) // start 3D payment
+paywallBuilder.start3DPayment(start3DPaymentRequestModel = Start3DPaymentRequestModel()) // 3D ödeme başlat
             .
             .
 override fun onSuccess(type: Int, response: String) {
         val gson = Gson()
         when (type) {
-                        .
-                        .
-            RequestTypes.Start3D.type ->  { // get start 3D payment response
-                val start3DResponse: Start3DResponse = gson.fromJson(response, Start3DResponse::class.java) //Convert json to Start3DResponse
+            RequestTypes.Start3D.type ->  { // 3D ödeme yanıtı
+                val start3DResponse: Start3DResponse = gson.fromJson(response, Start3DResponse::class.java)
                 Log.d(TAG, start3DResponse.toString())
                 
-                start3DResponse.Body?.RedirectUrl // You can open web page with 'RedirectUrl' to show 3D screen.
-                        .
-                        .
+                start3DResponse.Body?.RedirectUrl // 'RedirectUrl' parametresiyle 3D ödeme ekranına ilerleyebilirsiniz.                      
             }
         }
     }
@@ -116,11 +103,11 @@ override fun onSuccess(type: Int, response: String) {
           .
 ```
 
-End3d Payment:
+3D Ödeme sonlandırma:
 
-When you take response from 3D screen you have to call this request.
+3D Ödeme ekranından aldığınız yanıtn ardından 3D Ödeme metodunu çağırmalısınız. Bu metodunun yanıtında alacağınız başarısız veya başarılı bilgisi ödeme işleminin aynı zamanda sonucu olacaktır.
 
-Fill the "EndPaymentRequestModel" to End 3D Payment.
+3D Ödeme sonlandırmak için "EndPaymentRequestModel" modelini doldurmanız gerekmektedir. Bu modeldeki "MerchantUniqueCode", ödeme başlatırken kullandığınız kullandığınız "MerchantUniqueCode" parametresiyle aynı olmalıdır.
 
 ```kotlin
 data class EndPaymentRequestModel(
@@ -129,7 +116,7 @@ data class EndPaymentRequestModel(
 )
 ```
 ```kotlin
-paywallBuilder.end3DPayment(endPaymentRequestModel = EndPaymentRequestModel()) // end 3D payment
+paywallBuilder.end3DPayment(endPaymentRequestModel = EndPaymentRequestModel()) // Ödeme sonlandırma
             .
             .
 override fun onSuccess(type: Int, response: String) {
@@ -137,8 +124,8 @@ override fun onSuccess(type: Int, response: String) {
         when (type) {
                         .
                         .
-            RequestTypes.End3D.type ->  { // get end 3D payment response
-                val end3DResponse: End3DResponse = gson.fromJson(response, End3DResponse::class.java) //Convert json to End3DResponse
+            RequestTypes.End3D.type ->  { // Ödeme sonlandırma yanıtı
+                val end3DResponse: End3DResponse = gson.fromJson(response, End3DResponse::class.java)
                 Log.d(TAG, end3DResponse.toString())
                         .
                         .
@@ -149,7 +136,7 @@ override fun onSuccess(type: Int, response: String) {
           .
 ```
 
-Catch the error message
+Hata mesajlarını yakalayın
 
 ```kotlin
  override fun onError(type: Int, message: String) {
@@ -163,7 +150,7 @@ Catch the error message
         }
     }
 ```
-Request Types:
+İstek Çeşitleri:
 ```kotlin
 enum class RequestTypes(val type: Int) {
     Version(1),
