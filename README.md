@@ -49,7 +49,7 @@ paywallBuilder = PaywallBuilder.Builder()
 ```
 ## Functions
 
-Version:
+Versiyon:
 
 ```kotlin
 paywallBuilder.getVersion() // versiyon bilgisini alın
