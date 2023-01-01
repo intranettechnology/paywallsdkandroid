@@ -27,8 +27,6 @@ class PaywallBuilder private constructor(
     val payWallListener: PaywallListener?
 ) {
 
-    val loading = MutableLiveData<Boolean>()
-    val networkError = MutableLiveData<Throwable>()
     private val disposable = CompositeDisposable()
     private val serviceInstance = ServiceInstance()
 
@@ -65,6 +63,8 @@ class PaywallBuilder private constructor(
                             }
 
                             override fun onError(e: Throwable) {
+                                payWallListener?.onError(RequestTypes.Version.type,
+                                    e.message.toString())
                             }
                         })
                 }
@@ -99,6 +99,8 @@ class PaywallBuilder private constructor(
                             }
 
                             override fun onError(e: Throwable) {
+                                payWallListener?.onError(RequestTypes.Start3D.type,
+                                    e.message.toString())
                             }
                         })
                 }
@@ -132,6 +134,8 @@ class PaywallBuilder private constructor(
                             }
 
                             override fun onError(e: Throwable) {
+                                payWallListener?.onError(RequestTypes.End3D.type,
+                                    e.message.toString())
                             }
                         })
                 }

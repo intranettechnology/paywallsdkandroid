@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity(), PaywallListener {
 
         paywallBuilder.getVersion()
 
-        paywallBuilder.start3DPayment(start3DPaymentRequestModel = Start3DPaymentRequestModel())
-        paywallBuilder.end3DPayment(endPaymentRequestModel = EndPaymentRequestModel())
+        //paywallBuilder.start3DPayment(start3DPaymentRequestModel = Start3DPaymentRequestModel())
+        //paywallBuilder.end3DPayment(endPaymentRequestModel = EndPaymentRequestModel())
     }
 
     override fun onSuccess(type: Int, response: String) {
