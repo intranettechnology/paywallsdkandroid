@@ -4,7 +4,7 @@
 ## Projeye Ekleme
 
 ```kotlin
-implementation 'com.github.intranettechnology:paywallsdkandroid:1.0.1'
+implementation 'com.github.intranettechnology:paywallsdkandroid:1.0.2'
 
     repositories {
         maven { url 'https://jitpack.io' } // jitapck repository ekleyin
