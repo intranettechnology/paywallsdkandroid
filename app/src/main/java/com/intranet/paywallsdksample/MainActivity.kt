@@ -18,8 +18,9 @@ class MainActivity : AppCompatActivity(), PaywallListener {
 
         paywallBuilder = PaywallBuilder.Builder()
             .payWallListener(this)
-            .apiClient("")
-            .apiKey("")
+            .apiClient("bd5a1d8b-50f9-4c17-8a8c-93260af5f0ac")
+            .apiKey("xU2wYylAsO8xa5zL0oO7moLXWchYVYjiw0xYq6qivKUDEPraTiXr2ATWL+V/QkVJWieXKhPb93OPJPKHja9VIMg8N7CCo2PxiIyTFA8fHqla0XgHXn+5EReThF39QFAJlZUtnGAExzM27ITtoXG8dsFo4d6aJjI5YWrcbWtA4aEoi8viucQek/J2oA5ClwNFIjgyY9goJn0zxWyv+xxjgJWCfh0vBUtxt826hD386X5EVqrclip7DEPTaq6um47E9vb/3XGrBTWQcfO3RH9600Nn2AhvJZ7K7y9qpFCBrYkBub2adRAyGqdViGoQpuFzqQTiq3u+E9ydBi/b50oGfQ==")
+            .baseUrl("https://dev-payment-api.itspaywall.com/api/paywall/")
             .build()
 
         paywallBuilder.getVersion()
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity(), PaywallListener {
     override fun onError(type: Int, message: String) {
         when (type) {
             RequestTypes.Version.type ->  {
+                Log.d("TAG", message)
             }
             RequestTypes.Start3D.type ->  {
             }

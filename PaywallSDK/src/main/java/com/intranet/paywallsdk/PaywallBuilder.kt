@@ -24,6 +24,7 @@ import org.json.JSONObject
 class PaywallBuilder private constructor(
     val apiClient: String?,
     val apiKey: String?,
+    val baseUrl: String?,
     val payWallListener: PaywallListener?
 ) {
 
@@ -33,15 +34,20 @@ class PaywallBuilder private constructor(
     data class Builder(
         var apiClient: String? = null,
         var apiKey: String? = null,
+        var baseUrl: String? = null,
         var payWallListener: PaywallListener? = null
     ) {
 
         fun apiClient(apiClient: String) = apply { this.apiClient = apiClient }
         fun apiKey(apiKey: String) = apply { this.apiKey = apiKey }
+        fun baseUrl(baseUrl: String) = apply {
+            this.baseUrl = baseUrl
+            Constants.BASE_URL = baseUrl
+        }
         fun payWallListener(payWallListener: PaywallListener) =
             apply { this.payWallListener = payWallListener }
 
-        fun build() = PaywallBuilder(apiClient, apiKey, payWallListener)
+        fun build() = PaywallBuilder(apiClient, apiKey, baseUrl, payWallListener)
     }
 
     fun getVersion() {
