@@ -62,7 +62,7 @@ override fun onSuccess(type: Int, response: String) {
 
 3D Ödeme başlat:
 
-3D ödeme başlatmak için "Start3DPaymentRequestModel" modelini doldurmanız gerekmektedir. Bu model içerisinde "PaymentDetail" objesindeki "MerchantUniqueCode" parametresine her defasında unique bir kod vermelisiniz. Bu kod daha sonra ödeme bitirme işleminde kullanılacaktır. "MerchantSuccessBackUrl" parametresinde, 3D ödeme ekranında başarılı sonuç alındığı takdirde kullanıcının ilerlemesini istediğiniz sayfa ve aynı zamanda sizin takip edeceğiniz bir url eklemeniz gerekmektedir. "MerchantFailBackUrl" parametresinde, 3D ödeme ekranında başarısız sonuç alındığı takdirde kullanıcının ilerlemesini istediğiniz sayfa ve aynı zamanda sizin takip edeceğiniz bir url eklemeniz gerekmektedir.
+3D ödeme başlatmak için "Start3DPaymentRequestModel" modelini doldurmanız gerekmektedir. Bu model içerisinde "PaymentDetail" objesindeki "MerchantUniqueCode" parametresine her defasında unique bir kod vermelisiniz. Bu kod daha sonra ödeme bitirme işleminde kullanılacaktır. "MerchantSuccessBackUrl" parametresinde, 3D ödeme ekranında başarılı sonuç alındığı takdirde kullanıcının ilerlemesini istediğiniz sayfa ve aynı zamanda sizin takip edeceğiniz bir url eklemeniz gerekmektedir. 3D ödeme ekranında alınan başarılı sonucun ardından aşağıdaki "3D Ödeme sonlandırma" adımları izlenmelidir. "MerchantFailBackUrl" parametresinde, 3D ödeme ekranında başarısız sonuç alındığı takdirde kullanıcının ilerlemesini istediğiniz sayfa ve aynı zamanda sizin takip edeceğiniz bir url eklemeniz gerekmektedir.
 ```kotlin
 
 data class Start3DPaymentRequestModel(
