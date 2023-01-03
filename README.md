@@ -40,7 +40,7 @@ paywallBuilder = PaywallBuilder.Builder()
             .apiKey("YOUR_API_KEY")
             .build()
 ```
-## Functions
+## Fonksiyonlar
 
 Versiyon:
 
